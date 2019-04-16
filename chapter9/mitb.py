@@ -35,7 +35,7 @@ target_sites = {}
 
 target_sites["mail.163.com"] = {
     # "logout_url": "https://mail.163.com/logout.htm?showAd=1",
-    "logout_url": "https://mail.163.com/logout.htm?showAd=1#163|XuRuiyang|1554814617888|true",
+    "logout_url": "https://mail.163.com/logout.htm?showAd=1",
     "logout_form": None,
     "login_form_index": 0,
     "login_url": "https://mail.163.com/",
