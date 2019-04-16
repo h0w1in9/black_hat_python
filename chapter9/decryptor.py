@@ -1,0 +1,52 @@
+import zlib
+import base64
+
+from Crypto.Cipher import PKCS1_OAEP
+from Crypto.PublicKey import RSA
+
+encrypted="<encrypted message>"
+
+private_key = '''-----BEGIN RSA PRIVATE KEY-----
+MIIEowIBAAKCAQEAvnPeXLJdHVsS9ucNTwwhRMVfc9cdrSQ0HafoVuSKZnVwGImA
+Mer07YWLEOUK2yLOQUxEcA/Tsh24UMf9wiRdQjZXC2nixeGL9v/jC6DEnTdkIl+k
+bwIg5Qa4Dmspmg3RWibIspqaQOo7GxpF2XavrgczCT7l/Nek7GxyDQ4wGIyj8jh8
+S02kFNMetw9cfjARbwTRpvWMHIvjvxIWQnp/93bRrjHw6ajJjOSn8s3MhEtlBaS1
+U8tvjRkljbLx6Bs+cnlLNVdgW8uku4eoWzUgZEEP5LxKNxtfEroLcAkCrL2PR/wP
+fjXDTOBcuhnDNKChtx4dsAmefQHeL0b+NEMrhQIDAQABAoIBACCj+xgn+Y1ubnGi
+Z8WEbq86pIFV/OAPtF7gyBEcWhv1RKDv7+iePBv5JzxeBN5JuM+4IoKSM9XzAgPW
+QsdjNBiE96YdH6CKZ1KNyHvVsdzAAYlimuvrkXevDxxpgVfFxnuM6hiyJn25pyed
++RqsHK/WzAhpn0EWNE3QyDs0k0mhhKdmnr213VTCTnkFVqK6cr08m9O9pFVIY71f
+M36GPM6fKIQFLE2gg2IWIQueol23cI2OWTvOkoJXVqGAKy1KOtp4PWTunrMKckfR
+TEFSzUzm8o4mLBXUSoaUKVcd0K5m78T5dBzOIiE0WyAHgfab6LRpHCrDBxv3Dy/s
+E4CoDAECgYEAwiqTVkVRt3p/yKUjhHAvjjc7SRqJf7K3WeQ6tlY455n7d95mYBRW
+fqjh4VSJ82y3GwdNaXXfXP56bBS7ODGIapKv7vLbNAshBBEVv6w7ONMPsxYh7/sr
+YwW8vOQPXLOOJE3HxU+aSWiyUyZKIP09Pc5B9kglWLSOYDNBpzr1GC0CgYEA+xqI
+kGi0j7viNtCO3D81Q/RWdHvLxfcIeyL6umnYrQptsf1ukSJXAqBUZB3oXHUTmWDT
+3AuxZgvXxgjbuK1VYIfUfGpTPz1+vuHLKSu3M2z+Uh2JtX5Mmm97HuHf8Yv5fPCD
+N3DtL+C//XF4y9T5pqMqi5o8HbEnYtbupulcX7kCgYAlmkE2b+5Hbj3ZCcI7H87V
+5/RfT/hY9q9zhTOppEEY+UUuDbAd41Js7R/xl4Gv1toPLfbb+avsQoxK6ijn1Q/q
+M8ZGrFmvVohqVTS1DhHaC2X69MpVw3q/jpjiq/gdp9hbR4TsvWHP3arLV5r7kI+P
+rKYxn/87kpwQHV0VmeFlcQKBgQCDwr+ILzkX9vnT04ozLgOwPcUj6FXb8i2EF63D
+JYlp+3/mFtru0zsfCKxfwIXOBi0bnYBuBcC3kF1P8BQDiwiy13N7OXunQoiAdxDY
+8LR4CqhExHUfRD/EBd1wLgwJvm5Szg28iMgdCG0V+3XsVzwM4a+Qg4Up+2x0Y93k
+va0YGQKBgApXeWXs0/rkjA68FB/TpzHX0PnjH6OgnBlQcrUxHfAO1HVQuYG6Pj9r
+mLoceJ64XHOa4aH5dBCV8NV8twpIxYV435pEDItiXbGbIRidFBsIm7GNwUXnyqkv
+TU7x2tzxDBSbE1Trx78Pnh5BsZjKVlbiOEcDkCxyhXUVkbxrpy0f
+-----END RSA PRIVATE KEY-----'''
+
+rsakey = RSA.importKey(private_key)
+rsakey = PKCS1_OAEP.new(rsakey)
+
+chunk_size = 256
+offset = 0
+decrypted = ""
+
+encrypted = base64.b64decode(encrypted)
+
+while offset < len(encrypted):
+    decrypted += rsakey.decrypt(encrypted[offset:offset+chunk_size])
+    offset += chunk_size
+
+plaintext = zlib.decompress(decrypted)
+
+print plaintext
